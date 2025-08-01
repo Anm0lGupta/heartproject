@@ -1,35 +1,40 @@
 const bodyElement = document.querySelector("body");
 
-// This function creates a heart at a specific position
 function createHeart(xPos, yPos) {
   const spanElement = document.createElement("span");
+
+  // Add basic styles for the heart
+  spanElement.style.position = "absolute";
+  spanElement.style.background = "red";
+  spanElement.style.borderRadius = "50%";
+  spanElement.style.transform = "rotate(45deg)";
+  spanElement.style.pointerEvents = "none";
+
+  // Position the heart
   spanElement.style.left = xPos + "px";
   spanElement.style.top = yPos + "px";
 
-  // Randomize the size of the heart
-  const size = Math.random() * 100;
+  // Random size
+  const size = Math.random() * 40 + 10; // Keep heart sizes more realistic
   spanElement.style.width = size + "px";
   spanElement.style.height = size + "px";
 
   bodyElement.appendChild(spanElement);
 
-  // Remove the heart after 3 seconds
+  // Remove heart after 3 seconds
   setTimeout(() => {
     spanElement.remove();
   }, 3000);
 }
 
-// Listen for mouse movement on desktop
+// Mouse movement support
 bodyElement.addEventListener("mousemove", (event) => {
-  const xPosition = event.offsetX;
-  const yPosition = event.offsetY;
-  createHeart(xPosition, yPosition);
+  createHeart(event.pageX, event.pageY);
 });
 
-// Listen for finger movement on touch screens
+// Touch movement support (mobile)
 bodyElement.addEventListener("touchmove", (event) => {
-  // Use the first touch point
-  const xPosition = event.touches[0].pageX;
-  const yPosition = event.touches[0].pageY;
-  createHeart(xPosition, yPosition);
-});
+  event.preventDefault();
+  const touch = event.touches[0];
+  createHeart(touch.pageX, touch.pageY);
+}, { passive: false }); // <- important for preventDefault to work on mobile
